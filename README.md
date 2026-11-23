@@ -12,9 +12,9 @@ Aplikasi ini dibangun menggunakan **Laravel** dan **MySQL/MariaDB** dengan basis
 
 | No | Nama Lengkap | NIM | Peran / Modul |
 | :-: | :--- | :--- | :--- |
-| 1 | *[Isi Nama Ketua]* | *[Isi NIM]* | Setup Proyek, Database SQL, & Sisi Etalase Publik (`3a`, Keranjang, Checkout) |
-| 2 | *[Isi Nama Anggota 2]* | *[Isi NIM]* | Panel Admin: Produk (`3e`), Pesanan (`3b`, `3j`), & Pelanggan (`3d`, `3f`, `3i`) |
-| 3 | *[Isi Nama Anggota 3]* | *[Isi NIM]* | Dashboard Analitik (`3c`, `3g`, `3h`), Pengujian, Laporan PDF, & Video Demo |
+| 1 | *Abidah Azka Zaen Prasetyo* | *25091397018* | Setup Proyek, Database SQL, & Sisi Etalase Publik (`3a`, Keranjang, Checkout) |
+| 2 | *Farahdiba' Indirasanti Saputra* | *25091397008* | Panel Admin: Produk (`3e`), Pesanan (`3b`, `3j`), & Pelanggan (`3d`, `3f`, `3i`) |
+| 3 | *Ashilah Zahirah Haq* | *25091397033* | Dashboard Analitik (`3c`, `3g`, `3h`), Pengujian |
 
 ---
 
