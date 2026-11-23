@@ -1,59 +1,177 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TokoKita — Aplikasi Toko Daring
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mini Proyek Aplikasi Web Berbasis Basis Data Relasional (**Kasus 3: TokoKita**) untuk mata kuliah **Basis Data Lanjut** (Semester Ganjil 2026/2027).
 
-## About Laravel
+Aplikasi ini dibangun menggunakan **Laravel** dan **MySQL/MariaDB** dengan basis data `db_tokodaring`. TokoKita memiliki dua sisi utama:
+- **Etalase (Publik):** Katalog produk, filter kategori & rentang harga, keranjang belanja berbasis sesi, serta proses *checkout* dalam satu transaksi basis data.
+- **Panel Admin:** Dashboard analitik penjualan (kartu ringkasan & grafik), manajemen produk, pesanan (master-detail & perubahan status), serta pelanggan.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Anggota Kelompok 3
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| No | Nama Lengkap | NIM | Peran / Modul |
+| :-: | :--- | :--- | :--- |
+| 1 | *[Isi Nama Ketua]* | *[Isi NIM]* | Setup Proyek, Database SQL, & Sisi Etalase Publik (`3a`, Keranjang, Checkout) |
+| 2 | *[Isi Nama Anggota 2]* | *[Isi NIM]* | Panel Admin: Produk (`3e`), Pesanan (`3b`, `3j`), & Pelanggan (`3d`, `3f`, `3i`) |
+| 3 | *[Isi Nama Anggota 3]* | *[Isi NIM]* | Dashboard Analitik (`3c`, `3g`, `3h`), Pengujian, Laporan PDF, & Video Demo |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Teknologi yang Digunakan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Backend:** PHP 8.2+ & Laravel
+- **Basis Data:** MySQL / MariaDB (`db_tokodaring`, InnoDB)
+- **Frontend:** Blade Template, HTML, CSS (Bootstrap / Tailwind CSS), JavaScript, dan Chart.js
+- **Akses Data:** SQL eksplisit (*raw query*) menggunakan `Illuminate\Support\Facades\DB` dengan *prepared statement* (*parameter binding* `?`) tanpa *subquery*
+- **Version Control:** Git & GitHub
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Prasyarat Sistem
 
-### Premium Partners
+Pastikan perangkat sudah terpasang:
+- PHP `>= 8.2`
+- Composer
+- MySQL / MariaDB (misalnya melalui **Laragon** atau **XAMPP**)
+- Git
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## Cara Instalasi & Menjalankan dari Nol
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Ikuti langkah berikut secara berurutan agar aplikasi berjalan dengan benar:
 
-## Code of Conduct
+### 1. Clone Repositori
+```bash
+git clone https://github.com/USERNAME_KAMU/tokokita-kelompok3.git
+cd tokokita-kelompok3
+```
+*(Ganti URL di atas dengan tautan repositori GitHub proyek ini.)*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Import Basis Data `db_tokodaring`
+Buka MySQL client (HeidiSQL, phpMyAdmin, atau terminal MySQL), lalu jalankan berkas skrip SQL berikut secara berurutan:
+1. `database/sql/01_schema_dan_data.sql` — membuat basis data `db_tokodaring`, 4 tabel inti (`pelanggan`, `produk`, `pesanan`, `detail_pesanan`), beserta data awal dari dokumen latihan.
+2. `database/sql/02_tambahan.sql` *(jika tersedia)* — membuat objek pendukung tambahan (seperti tabel `users` atau `VIEW`) tanpa mengubah struktur tabel inti.
 
-## Security Vulnerabilities
+> **Penting:** Jangan menjalankan `php artisan migrate` agar struktur basis data `db_tokodaring` tetap bersih sesuai skema dokumen latihan.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3. Install Dependensi Laravel
+```bash
+composer install
+```
 
-## License
+### 4. Konfigurasi File `.env`
+Salin berkas `.env.example` menjadi `.env`:
+- **Git Bash / macOS / Linux:**
+  ```bash
+  cp .env.example .env
+  ```
+- **Windows Command Prompt / PowerShell:**
+  ```powershell
+  copy .env.example .env
+  ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Buka file `.env`, lalu sesuaikan kredensial MySQL lokal Anda:
+```env
+APP_NAME="TokoKita"
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_tokodaring
+DB_USERNAME=root
+DB_PASSWORD=
+
+SESSION_DRIVER=file
+CACHE_STORE=file
+
+# Mode demo menggunakan tanggal acuan 2026-11-13
+APP_DEMO_MODE=true
+TANGGAL_ACUAN=2026-11-13
+```
+*(Jika MySQL lokal Anda menggunakan password untuk user `root`, isikan pada `DB_PASSWORD`.)*
+
+### 5. Generate Application Key & Bersihkan Cache
+```bash
+php artisan key:generate
+php artisan config:clear
+```
+
+### 6. Jalankan Aplikasi
+```bash
+php artisan serve
+```
+Buka peramban web (*browser*) dan akses:
+- **Etalase Publik:** `http://127.0.0.1:8000`
+- **Panel Admin:** `http://127.0.0.1:8000/admin`
+- **Endpoint Tes Koneksi Awal:** `http://127.0.0.1:8000/tes-etalase`
+
+---
+
+## Mode Demo vs Mode Produksi (`TANGGAL_ACUAN`)
+
+Aplikasi menyediakan konfigurasi tanggal acuan di `.env` dan `config/tokokita.php`:
+- **Mode Demo (`APP_DEMO_MODE=true`):** Menggunakan nilai `TANGGAL_ACUAN=2026-11-13` untuk konsistensi pengujian data awal.
+- **Mode Produksi (`APP_DEMO_MODE=false`):** Menggunakan tanggal sistem terkini (`CURDATE()`).
+
+---
+
+## Pemetaan Fitur terhadap Soal Latihan SQL (`3a`–`3j`)
+
+Seluruh query laporan ditulis sebagai **SQL eksplisit tanpa subquery**, dilengkapi komentar kode soal (misalnya `-- Soal 3h`), dan diuji menggunakan data awal:
+
+| Kode Soal | Halaman / Fitur | Konsep SQL |
+| :-: | :--- | :--- |
+| **3a** | Etalase: Filter katalog berdasarkan kategori dan rentang harga | `BETWEEN`, `AND` |
+| **3b** | Admin Pesanan: Daftar pesanan beserta total nilai transaksi | `SUM(jumlah * harga_satuan)` |
+| **3c** | Dashboard Admin: 5 produk terlaris berdasarkan unit terjual | `SUM`, `ORDER BY`, `LIMIT` |
+| **3d** | Dashboard & Pelanggan: Pelanggan prioritas (belanja 2026 > Rp10.000.000) | `JOIN` 3 tabel, `HAVING` |
+| **3e** | Dashboard & Produk: Penanda produk yang belum pernah dipesan | `LEFT JOIN` + `IS NULL` |
+| **3f** | Admin Pelanggan: Jumlah pelanggan per kota | `COUNT`, `GROUP BY` |
+| **3g** | Dashboard Admin: Pendapatan per kategori (khusus status `selesai`) | Seleksi status + agregasi |
+| **3h** | Dashboard Admin: Grafik pendapatan bulanan tahun 2026 (tanpa `batal`) | `MONTH()`, `<>` |
+| **3i** | Dashboard & Pelanggan: Pelanggan yang belum pernah memesan (target promo) | `LEFT JOIN` + `IS NULL` |
+| **3j** | Admin Detail Pesanan: Jumlah jenis produk pada pesanan (> 3 jenis) | `COUNT`, `HAVING` |
+
+---
+
+## Aturan Bisnis & Standar Keamanan
+
+1. **Harga Historis:** Seluruh perhitungan nilai pesanan dan pendapatan menggunakan `detail_pesanan.harga_satuan`, bukan `produk.harga`. Saat *checkout*, `harga_satuan` diisi otomatis dari harga produk terkini.
+2. **Transaksi Checkout Atomik:** Proses `INSERT pesanan`, `INSERT detail_pesanan`, dan `UPDATE produk` (pengurangan stok) dibungkus dalam satu transaksi (`DB::beginTransaction()`, `DB::commit()`, `DB::rollBack()`).
+3. **Siklus Status Pesanan:** Perubahan status mengikuti alur `diproses` -> `dikirim` -> `selesai`, atau `diproses` -> `batal`. Pesanan berstatus `selesai` atau `batal` tidak dapat diubah lagi.
+4. **Integritas Referensial:** Produk yang sudah memiliki riwayat pesanan tidak dapat dihapus dan ditangani dengan pesan galat yang ramah.
+5. **Keamanan Query & Kredensial:** Seluruh input pengguna menggunakan *prepared statement* (*parameter binding*), dan file `.env` dikecualikan dari repositori melalui `.gitignore`.
+6. **Format Indonesia:** Tanggal diformat `13 Nov 2026` / `13/11/2026` dan mata uang diformat `Rp7.650.000` menggunakan helper global `app/Helpers/FormatHelper.php`.
+
+---
+
+## Struktur Folder Utama
+
+```text
+tokokita/
+├── app/
+│   ├── Helpers/
+│   │   └── FormatHelper.php       <- Helper format Rupiah & tanggal Indonesia
+│   ├── Http/Controllers/          <- Controller Etalase & Admin
+│   └── Models/ (atau Repositories/) <- Seluruh query raw SQL (berkomentar kode soal)
+├── config/
+│   └── tokokita.php               <- Konfigurasi mode demo & TANGGAL_ACUAN
+├── database/
+│   └── sql/
+│       ├── 01_schema_dan_data.sql <- Skrip skema & data awal db_tokodaring
+│       └── 02_tambahan.sql        <- Skrip tambahan (opsional)
+├── resources/views/               <- Template Blade (layouts, etalase, admin)
+├── routes/web.php                 <- Definisi seluruh rute aplikasi
+├── .env.example                   <- Template variabel environment tanpa kredensial
+└── README.md                      <- Panduan instalasi dan dokumentasi proyek
+```
+
+---
+
+## Panduan Kolaborasi Tim (Git)
+
+- Setiap anggota wajib bekerja di *branch* masing-masing (misalnya `fitur-etalase`, `fitur-admin`, `fitur-dashboard`) dan menggabungkannya ke `main` melalui **Pull Request**.
+- Setiap anggota wajib memiliki minimal **1 commit per minggu** menggunakan akun GitHub masing-masing.
+- Selalu jalankan `git pull origin main` sebelum mulai mengerjakan fitur baru agar kode tetap sinkron.
