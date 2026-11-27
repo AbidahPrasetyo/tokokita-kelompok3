@@ -13,8 +13,9 @@ use App\Http\Controllers\Admin\PelangganController;
 Route::get('/', [EtalaseController::class, 'index'])->name('etalase.index');
 Route::get('/katalog', [EtalaseController::class, 'index'])->name('etalase.katalog');
 
-// Placeholder rute Keranjang & Checkout (dikerjakan di Minggu 2)
+// Placeholder rute Keranjang & Checkout
 Route::post('/keranjang/tambah', [EtalaseController::class, 'tambahKeranjang'])->name('keranjang.tambah');
+Route::post('/keranjang/ubah', [EtalaseController::class, 'ubahKeranjang'])->name('keranjang.ubah');
 Route::post('/keranjang/hapus', [EtalaseController::class, 'hapusKeranjang'])->name('keranjang.hapus');
 Route::post('/checkout', [EtalaseController::class, 'checkout'])->name('etalase.checkout');
 

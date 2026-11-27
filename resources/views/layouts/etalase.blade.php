@@ -37,8 +37,11 @@
 
             {{-- Navigasi Kanan --}}
             <div class="flex items-center gap-4 text-sm font-medium shrink-0">
+                @php
+                    $totalUnitKeranjang = array_sum(array_column(session('keranjang', []), 'jumlah'));
+                @endphp
                 <a href="#keranjang" class="hover:text-orange-200 transition">
-                    Keranjang ({{ count(session('keranjang', [])) }})
+                    Keranjang ({{ $totalUnitKeranjang }})
                 </a>
                 <span class="opacity-40">|</span>
                 <a href="{{ route('admin.dashboard') }}" class="bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded transition">

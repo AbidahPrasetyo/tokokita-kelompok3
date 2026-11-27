@@ -137,12 +137,96 @@
         @endif
     </section>
 
-    {{-- KANAN: Panel Keranjang Belanja (Akan diaktifkan di Minggu 2) --}}
+    {{-- KANAN: Panel Keranjang Belanja & Checkout (T04 & T05) --}}
     <aside id="keranjang" class="lg:col-span-3 bg-[#FAF3EF] border border-stone-200 rounded-xl p-5 shadow-sm">
-        <h2 class="font-bold text-stone-800 mb-3">Keranjang Belanja</h2>
-        <p class="text-sm text-stone-500">
-            Keranjang masih kosong. Fitur keranjang &amp; checkout transaksi akan melengkapi panel ini pada Minggu 2.
-        </p>
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="font-bold text-stone-800">Keranjang Belanja</h2>
+            <span class="text-xs font-semibold text-stone-500">{{ count($keranjang) }} jenis</span>
+        </div>
+
+        @if(empty($keranjang))
+            <p class="text-sm text-stone-500 py-4 text-center">
+                Keranjang masih kosong. Klik <strong>+ Keranjang</strong> pada produk untuk mulai belanja.
+            </p>
+        @else
+            <div class="space-y-3 divide-y divide-stone-200">
+                @foreach($keranjang as $item)
+                    <div class="pt-3 first:pt-0">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <p class="text-sm font-semibold text-stone-800 leading-snug">
+                                    {{ $item['nama_produk'] }}
+                                </p>
+                                <p class="text-xs text-stone-500 mt-0.5">
+                                    {{ $item['jumlah'] }} &times; {{ format_rupiah($item['harga']) }}
+                                </p>
+                            </div>
+                            <form action="{{ route('keranjang.hapus') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="id_produk" value="{{ $item['id_produk'] }}">
+                                <button type="submit" title="Hapus item"
+                                        class="text-xs text-red-600 hover:text-red-800 font-semibold px-1">
+                                    &times;
+                                </button>
+                            </form>
+                        </div>
+
+                        {{-- Form Ubah Jumlah & Subtotal --}}
+                        <div class="mt-2 flex items-center justify-between gap-2">
+                            <form action="{{ route('keranjang.ubah') }}" method="POST" class="flex items-center gap-1">
+                                @csrf
+                                <input type="hidden" name="id_produk" value="{{ $item['id_produk'] }}">
+                                <input
+                                    type="number"
+                                    name="jumlah"
+                                    value="{{ $item['jumlah'] }}"
+                                    min="0"
+                                    max="{{ $item['stok'] }}"
+                                    class="w-16 px-2 py-1 text-xs border border-stone-300 rounded bg-white text-center focus:outline-none focus:ring-1 focus:ring-[#A8380F]"
+                                >
+                                <button type="submit"
+                                        class="px-2 py-1 text-xs border border-stone-300 rounded bg-white hover:bg-stone-100 text-stone-700">
+                                    Ubah
+                                </button>
+                            </form>
+                            <span class="text-xs font-bold text-stone-800">
+                                {{ format_rupiah($item['harga'] * $item['jumlah']) }}
+                            </span>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            {{-- Total Sementara --}}
+            <div class="border-t border-stone-300 mt-4 pt-3 flex items-center justify-between">
+                <span class="text-sm font-bold text-stone-800">Total</span>
+                <span class="text-base font-bold text-[#A8380F]">{{ format_rupiah($totalKeranjang) }}</span>
+            </div>
+
+            {{-- Form Pilih Pelanggan & Checkout --}}
+            <form action="{{ route('etalase.checkout') }}" method="POST" class="mt-4 space-y-3">
+                @csrf
+                <div>
+                    <label for="id_pelanggan" class="block text-xs font-semibold text-stone-600 mb-1">
+                        Pilih Pelanggan
+                    </label>
+                    <select id="id_pelanggan" name="id_pelanggan" required
+                            class="w-full px-3 py-2 text-sm border border-stone-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-[#A8380F]">
+                        <option value="">-- Pilih Pelanggan --</option>
+                        @foreach($daftarPelanggan as $pl)
+                            <option value="{{ $pl->id_pelanggan }}">
+                                {{ $pl->id_pelanggan }} — {{ $pl->nama }} ({{ $pl->kota }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button type="submit"
+                        class="w-full bg-[#A8380F] hover:bg-[#8E2F0C] text-white text-sm font-semibold py-2.5 rounded-md transition">
+                    Checkout
+                </button>
+            </form>
+        @endif
     </aside>
 
 </div>
