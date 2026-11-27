@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models; // Ubah ke App\Repositories jika repo Ketua memakai app/Repositories
+namespace App\Models; // Ubah ke App\Repositories jika proyekmu memakai folder Repositories
 
 use Illuminate\Support\Facades\DB;
 
@@ -9,7 +9,6 @@ class LaporanRepository
     /**
      * 5 produk terlaris berdasarkan total jumlah unit terjual.
      * Menjawab Soal 3c (alias wajib: nama_produk, total_terjual).
-     * Konsep: SUM, GROUP BY, ORDER BY, LIMIT (tanpa subquery).
      */
     public function produkTerlaris(int $limit = 5): array
     {
@@ -31,7 +30,7 @@ class LaporanRepository
     /**
      * Total pendapatan per kategori produk, khusus pesanan berstatus 'selesai'.
      * Menjawab Soal 3g (alias wajib: kategori, pendapatan).
-     * Wajib menghitung dari detail_pesanan.harga_satuan (harga historis).
+     * Wajib menggunakan detail_pesanan.harga_satuan (harga historis).
      */
     public function pendapatanPerKategori(string $status = 'selesai'): array
     {
@@ -52,9 +51,8 @@ class LaporanRepository
     }
 
     /**
-     * Total pendapatan per bulan selama tahun terpilih (pesanan berstatus 'batal' tidak dihitung).
+     * Total pendapatan per bulan selama tahun terpilih (status 'batal' tidak dihitung).
      * Menjawab Soal 3h (alias wajib: bulan, pendapatan).
-     * Konsep: MONTH(), YEAR(), operator <> (tanpa subquery).
      */
     public function pendapatanBulanan(int $tahun = 2026): array
     {
@@ -75,11 +73,60 @@ class LaporanRepository
     }
 
     /**
-     * Data angka untuk 4 kartu ringkasan pada Dashboard Admin (persiapan T18).
+     * Pelanggan prioritas: total belanja tahun terpilih lebih dari Rp10.000.000.
+     * Menjawab Soal 3d (JOIN 3 tabel + HAVING, tanpa subquery).
+     */
+    public function pelangganPrioritas(int $tahun = 2026, float $batasMinimal = 10000000): array
+    {
+        // -- Soal 3d
+        $sql = "
+            SELECT
+                pl.id_pelanggan,
+                pl.nama,
+                pl.email,
+                pl.kota,
+                SUM(dp.jumlah * dp.harga_satuan) AS total_belanja
+            FROM pelanggan pl
+            INNER JOIN pesanan ps ON pl.id_pelanggan = ps.id_pelanggan
+            INNER JOIN detail_pesanan dp ON ps.id_pesanan = dp.id_pesanan
+            WHERE YEAR(ps.tgl_pesan) = ?
+              AND ps.status <> 'batal'
+            GROUP BY pl.id_pelanggan, pl.nama, pl.email, pl.kota
+            HAVING SUM(dp.jumlah * dp.harga_satuan) > ?
+            ORDER BY total_belanja DESC
+        ";
+
+        return DB::select($sql, [$tahun, $batasMinimal]);
+    }
+
+    /**
+     * Pelanggan yang belum pernah memesan sama sekali (target promo).
+     * Menjawab Soal 3i (LEFT JOIN + IS NULL, tanpa subquery).
+     */
+    public function pelangganBelumPernahMemesan(): array
+    {
+        // -- Soal 3i
+        $sql = "
+            SELECT
+                pl.id_pelanggan,
+                pl.nama,
+                pl.email,
+                pl.kota
+            FROM pelanggan pl
+            LEFT JOIN pesanan ps ON pl.id_pelanggan = ps.id_pelanggan
+            WHERE ps.id_pesanan IS NULL
+            ORDER BY pl.id_pelanggan ASC
+        ";
+
+        return DB::select($sql);
+    }
+
+    /**
+     * Data angka untuk 4 kartu ringkasan pada Dashboard Admin.
      */
     public function ringkasanDashboard(int $tahun = 2026): array
     {
-        $pesanan = DB::selectOne("SELECT COUNT(*) AS total FROM pesanan");
+        $pesanan   = DB::selectOne("SELECT COUNT(*) AS total FROM pesanan");
         $pelanggan = DB::selectOne("SELECT COUNT(*) AS total FROM pelanggan");
 
         // Total pendapatan tahun berjalan tanpa status 'batal' (selaras Soal 3h)
@@ -100,10 +147,10 @@ class LaporanRepository
         ");
 
         return [
-            'jumlah_pesanan'  => (int) ($pesanan->total ?? 0),
-            'total_pendapatan'=> (float) ($pendapatan->total ?? 0),
-            'total_pelanggan' => (int) ($pelanggan->total ?? 0),
-            'produk_tak_laku' => (int) ($produkTakLaku->total ?? 0),
+            'jumlah_pesanan'   => (int) ($pesanan->total ?? 0),
+            'total_pendapatan' => (float) ($pendapatan->total ?? 0),
+            'total_pelanggan'  => (int) ($pelanggan->total ?? 0),
+            'produk_tak_laku'  => (int) ($produkTakLaku->total ?? 0),
         ];
     }
 }
