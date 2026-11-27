@@ -39,6 +39,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/pesanan/{id}', [PesananController::class, 'show'])->name('pesanan.show');
     Route::patch('/pesanan/{id}/status', [PesananController::class, 'updateStatus'])->name('pesanan.status');
 
+    Route::get('/pesanan/{id}/invoice', [PesananController::class, 'invoice'])->name('pesanan.invoice');
+
     // Pelanggan & Soal 3d, 3f, 3i (Anggota 2)
     Route::get('/pelanggan', [PelangganController::class, 'index'])->name('pelanggan.index');
     Route::post('/pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
