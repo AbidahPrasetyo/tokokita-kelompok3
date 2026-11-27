@@ -43,4 +43,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
     Route::put('/pelanggan/{id}', [PelangganController::class, 'update'])->name('pelanggan.update');
     Route::delete('/pelanggan/{id}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
-});
+
+    Route::patch('/produk/{id}/toggle-status', [ProdukController::class, 'toggleStatus'])->name('produk.toggle');
+    
+    });
